@@ -115,7 +115,8 @@ USE_TZ = True
 
 #User
 
-AUTH_USER_MODEL = 'models.Customer'
+
+AUTH_USER_MODEL = 'main.Customer'
 
 
 # Static files (CSS, JavaScript, Images)
