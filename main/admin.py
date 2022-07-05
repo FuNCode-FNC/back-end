@@ -1,12 +1,8 @@
 from django.contrib import admin
-
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 
-
 from .forms import UserAdminCreationForm, UserAdminChangeForm
-
-from .models import Comment
 
 User = get_user_model()
 
@@ -17,10 +13,10 @@ class UserAdmin(BaseUserAdmin):
     add_form = UserAdminCreationForm
 
 
-    list_display = ['email','username', 'admin', 'firstName', 'secondName']
+    list_display = ['email','username', 'firstName', 'secondName','is_active', 'admin']
     list_filter = ['admin']
     fieldsets = (
-        (None, {'fields': ('email','username','password','firstName','secondName')}),
+        (None, {'fields': ('email','username','password','firstName','secondName','is_active')}),
         ('Personal info', {'fields': ()}),
         ('Permissions', {'fields': ('admin','account_type')}),
     )
@@ -37,4 +33,3 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Comment)
