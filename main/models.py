@@ -1,44 +1,8 @@
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
 from .manager import CustomerManager
-from django.utils import timezone
-from django.conf import settings
-
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-
-
-class Country(models.Model):
-    class Meta:
-        verbose_name = "Страна"
-        verbose_name_plural = "Страны"
-
-    name = models.CharField('Страна производства', max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class Genre(models.Model):
-    class Meta:
-        verbose_name = "Жанр"
-        verbose_name_plural = "Жанры"
-
-    name = models.CharField('Жанр', max_length=50)
-
-    def __str__(self):
-        return self.name
-
-
-class Category(models.Model):
-    class Meta:
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
-
-    name = models.CharField('Категория', max_length=50)
-
-    def __str__(self):
-        return self.name
 
 
 class Customer(AbstractBaseUser, PermissionsMixin):
@@ -85,31 +49,37 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-class FilmAbstract(models.Model):
-    name = models.CharField(max_length=250)
-    description = models.TextField(max_length=5000)
-    kinopoisk_id = models.IntegerField(null=False)
+class Country(models.Model):
+    class Meta:
+        verbose_name = "Страна"
+        verbose_name_plural = "Страны"
+
+    name = models.CharField('Страна производства', max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
-class SerialAbstract(models.Model):
-    name = models.CharField(max_length=250)
-    description = models.TextField(max_length=5000)
-    kinopoisk_id = models.IntegerField(null=False)
+class Genre(models.Model):
+    class Meta:
+        verbose_name = "Жанр"
+        verbose_name_plural = "Жанры"
+
+    name = models.CharField('Жанр', max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
-    body = models.TextField()
-    rating = models.SmallIntegerField()
-    to_film = models.ForeignKey(FilmAbstract, on_delete=models.CASCADE)
-    to_serial = models.ForeignKey(SerialAbstract, on_delete=models.CASCADE)
+class Category(models.Model):
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
 
-    def check_comment(self):
-        if Comment.to_film is None and Comment.to_serial is None:
-            return False
-        else:
-            return True
+    name = models.CharField('Категория', max_length=50)
 
+    def __str__(self):
+        return self.name
 
 
 class Film(models.Model):
@@ -166,6 +136,19 @@ class Episode(models.Model):
     season_parent = models.ForeignKey(Season, on_delete=models.CASCADE)
     person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     number_of_series = models.IntegerField()
-#   time_field = models.TimeField() #продолжительность в секундах; может не понадобиться
+    #   time_field = models.TimeField() #продолжительность в секундах; может не понадобиться
     magnet_reference = models.URLField()
 
+
+class Comment(models.Model):
+    author = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    body = models.TextField()
+    rating = models.SmallIntegerField()
+    to_film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    to_serial = models.ForeignKey(Serial, on_delete=models.CASCADE)
+
+    def check_comment(self):
+        if Comment.to_film is None and Comment.to_serial is None:
+            return False
+        else:
+            return True
