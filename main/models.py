@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
 from .manager import CustomerManager
+from django.utils import timezone
+from django.conf import settings
 
 
 class Customer(AbstractBaseUser, PermissionsMixin):
@@ -73,14 +75,74 @@ class Comment(models.Model):
             return True
 
 
+class Country(models.Model):
+    class Meta:
+        verbose_name = "Страна"
+        verbose_name_plural = "Страны"
+
+
+class Genre(models.Model):
+    class Meta:
+        verbose_name = "Жанр"
+        verbose_name_plural = "Жанры"
+
+
+class Category(models.Model):
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
 
 class Film(models.Model):
     class Meta:
         verbose_name = "Фильм"
         verbose_name_plural = "Фильмы"
 
-    name = models.CharField(max_length=200)
-    text = models.TextField()
+    name = models.CharField('Название', max_length=200)
+    description = models.TextField('Описание')
+    year_of_release = models.IntegerField()
+    date_of_adding = models.DateTimeField(default=timezone.now)
+    category = models.ManyToManyField(Category)
+    genre = models.ManyToManyField(Genre)
+    country = models.ManyToManyField(Country)
+    person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     screensaver_reference = models.URLField()
     magnet_reference = models.URLField()
 
+
+class Serial(models.Model):
+    class Meta:
+        verbose_name = "Сериал"
+        verbose_name_plural = "Сериалы"
+
+    name = models.CharField('Название', max_length=200)
+    description = models.TextField('Описание')
+    category = models.ManyToManyField(Category)
+    genre = models.ManyToManyField(Genre)
+    date_of_creation = models.IntegerField()
+    country = models.ManyToManyField(Country)
+    date_of_adding = models.DateTimeField(default=timezone.now)
+    person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    screensaver_reference = models.URLField()
+
+
+class Season(models.Model):
+    class Meta:
+        verbose_name = "Сезон"
+        verbose_name_plural = "Сезоны"
+
+    serial_parent = models.ForeignKey(Serial, on_delete=models.CASCADE)
+    person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    number_of_season = models.IntegerField()
+
+
+class Episode(models.Model):
+    class Meta:
+        verbose_name = "Эпизод"
+        verbose_name_plural = "Эпизоды"
+
+    season_parent = models.ForeignKey(Season, on_delete=models.CASCADE)
+    person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+    number_of_series = models.IntegerField()
+#   time_field = models.TimeField() #продолжительность в секундах; может не понадобиться
+    magnet_reference = models.URLField()
