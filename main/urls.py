@@ -15,4 +15,12 @@ urlpatterns = [
     path("recovery-page/", views.recovery_page, name="recovery_page"),
     path("sign-in-page/", views.sign_in_page, name="sign_in_page"),
     path("sign-up-email/", views.sign_up_email, name="sign_up-email"),
+    
+    #  need fix
+    path('profile',views.profile),
+    path('api/v1/logIn',views.logIn),
+    path('api/v1/signUp', views.signUp),
+    path('api/v1/logOut',views.logOut),
+    path('activate/<slug:uidb64>/<slug:token>/',
+            views.activate, name='activate'),
 ]
