@@ -1,8 +1,44 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, PermissionsMixin
 from .manager import CustomerManager
 from django.utils import timezone
 from django.conf import settings
+
+from django.db import models
+from django.utils import timezone
+from django.conf import settings
+
+
+class Country(models.Model):
+    class Meta:
+        verbose_name = "Страна"
+        verbose_name_plural = "Страны"
+
+    name = models.CharField('Страна производства', max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class Genre(models.Model):
+    class Meta:
+        verbose_name = "Жанр"
+        verbose_name_plural = "Жанры"
+
+    name = models.CharField('Жанр', max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class Category(models.Model):
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+    name = models.CharField('Категория', max_length=50)
+
+    def __str__(self):
+        return self.name
 
 
 class Customer(AbstractBaseUser, PermissionsMixin):
@@ -75,23 +111,6 @@ class Comment(models.Model):
             return True
 
 
-class Country(models.Model):
-    class Meta:
-        verbose_name = "Страна"
-        verbose_name_plural = "Страны"
-
-
-class Genre(models.Model):
-    class Meta:
-        verbose_name = "Жанр"
-        verbose_name_plural = "Жанры"
-
-
-class Category(models.Model):
-    class Meta:
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
-
 
 class Film(models.Model):
     class Meta:
@@ -101,13 +120,16 @@ class Film(models.Model):
     name = models.CharField('Название', max_length=200)
     description = models.TextField('Описание')
     year_of_release = models.IntegerField()
-    date_of_adding = models.DateTimeField(default=timezone.now)
+    date_of_adding = models.DateField(default=timezone.now)
     category = models.ManyToManyField(Category)
     genre = models.ManyToManyField(Genre)
     country = models.ManyToManyField(Country)
     person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     screensaver_reference = models.URLField()
     magnet_reference = models.URLField()
+
+    def __str__(self):
+        return self.name
 
 
 class Serial(models.Model):
@@ -146,3 +168,4 @@ class Episode(models.Model):
     number_of_series = models.IntegerField()
 #   time_field = models.TimeField() #продолжительность в секундах; может не понадобиться
     magnet_reference = models.URLField()
+
