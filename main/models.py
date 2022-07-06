@@ -152,3 +152,56 @@ class Comment(models.Model):
             return False
         else:
             return True
+
+
+class Trailer(models.Model):
+    class Meta:
+        verbose_name = "Трейлер"
+        verbose_name_plural = "Трейлеры"
+
+    film_pk = models.ForeignKey(Film, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
+    serial_pk = models.ForeignKey(Serial, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
+    season_pk = models.ForeignKey(Serial, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
+    episode_pk = models.ForeignKey(Episode, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
+    reference = models.URLField()
+
+    def check_reference(self):
+        quantity_of_not_null = 0
+        if self.film_pk is not None:
+            quantity_of_not_null += 1
+        if self.serial_pk is not None:
+            quantity_of_not_null += 1
+        if self.episode_pk is not None:
+            quantity_of_not_null += 1
+        if self.season_pk is not None:
+            quantity_of_not_null += 1
+        if quantity_of_not_null != 1:
+            return False
+        return True
+
+
+class Viewed(models.Model):
+    class Meta:
+        verbose_name_plural = "Просмотренные"
+
+    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    film_ref = models.ManyToManyField(Film)
+    episode_ref = models.ManyToManyField(Episode)
+
+
+class Favorites(models.Model):
+    class Meta:
+        verbose_name_plural = "Избранные"
+
+    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    film_ref = models.ManyToManyField(Film)
+    episode_ref = models.ManyToManyField(Episode)
+
+
+class ScheduledForViewing(models.Model):
+    class Meta:
+        verbose_name_plural = "Запланированные к просмотру"
+    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    film_ref = models.ManyToManyField(Film)
+    episode_ref = models.ManyToManyField(Episode)
+
