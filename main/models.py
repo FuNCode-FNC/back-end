@@ -201,7 +201,7 @@ class Favorites(models.Model):
 class ScheduledForViewing(models.Model):
     class Meta:
         verbose_name_plural = "Запланированные к просмотру"
+
     user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
-
