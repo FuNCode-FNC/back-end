@@ -159,10 +159,10 @@ class Trailer(models.Model):
         verbose_name = "Трейлер"
         verbose_name_plural = "Трейлеры"
 
-    film_pk = models.ForeignKey(Film, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
-    serial_pk = models.ForeignKey(Serial, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
-    season_pk = models.ForeignKey(Serial, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
-    episode_pk = models.ForeignKey(Episode, primary_key=True, blank=True, null=True, on_delete=models.SET_NULL)
+    film_pk = models.ForeignKey(Film, blank=True, null=True, on_delete=models.SET_NULL)
+    serial_pk = models.ForeignKey(Serial, blank=True, null=True, on_delete=models.SET_NULL)
+    season_pk = models.ForeignKey(Serial, blank=True, null=True, on_delete=models.SET_NULL)
+    episode_pk = models.ForeignKey(Episode, blank=True, null=True, on_delete=models.SET_NULL)
     reference = models.URLField()
 
     def check_reference(self):
@@ -184,7 +184,7 @@ class Viewed(models.Model):
     class Meta:
         verbose_name_plural = "Просмотренные"
 
-    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -193,7 +193,7 @@ class Favorites(models.Model):
     class Meta:
         verbose_name_plural = "Избранные"
 
-    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -202,6 +202,6 @@ class ScheduledForViewing(models.Model):
     class Meta:
         verbose_name_plural = "Запланированные к просмотру"
 
-    user_pk = models.ForeignKey(Customer, primary_key=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
