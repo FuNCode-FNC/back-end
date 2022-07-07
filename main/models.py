@@ -161,7 +161,7 @@ class Trailer(models.Model):
 
     film_pk = models.ForeignKey(Film, blank=True, null=True, on_delete=models.SET_NULL)
     serial_pk = models.ForeignKey(Serial, blank=True, null=True, on_delete=models.SET_NULL)
-    season_pk = models.ForeignKey(Serial, blank=True, null=True, on_delete=models.SET_NULL)
+    season_pk = models.ForeignKey(Season, blank=True, null=True, on_delete=models.SET_NULL)
     episode_pk = models.ForeignKey(Episode, blank=True, null=True, on_delete=models.SET_NULL)
     reference = models.URLField()
 
