@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-)5fhhe&gbd73+i@api^&$4ts!_+rfw-0%ze4ws@#j&e)ahu8z+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 # Application definition
 
@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.utils',
-    'users'
+    'main'
 ]
 
 MIDDLEWARE = [
@@ -49,12 +49,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'player.urls'
+ROOT_URLCONF = 'cinema.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'player.wsgi.application'
+WSGI_APPLICATION = 'cinema.wsgi.application'
 
 
 # Database
@@ -113,10 +113,12 @@ USE_TZ = True
 AUTH_USER_MODEL = 'main.Customer'
 
 #Email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_HOST_USER = '******'
-EMAIL_HOST_PASSWORD = '*****'
+EMAIL_HOST_USER = 'ant1hype4@yandex.ru'
+EMAIL_HOST_PASSWORD = '071002071002'
 EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)

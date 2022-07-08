@@ -1,26 +1,27 @@
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include,re_path
 from . import views
+from django.contrib.auth import views as auth_views
+
+
 
 urlpatterns = [
-    path("", views.main_page, name='name_page'),
-    path('account/', views.account, name='account'),
-    path('filmpage/', views.filmpage, name='filmpage'),
-    path('list-of-films/', views.list_of_films, name='list_of_films'),
-    path('recovery-new-password/', views.recovery_new_password, name='recovery_new_password'),
-    path('change-new-password/', views.change_new_password, name='change_new_password'),
-    path('sign-up-page/', views.sign_up_page, name='sign_up_page'),
-    path("films_genres/", views.films_genres, name="films_genres"),
-    path("moderator/", views.moderator, name="moderator"),
-    path("recovery-page/", views.recovery_page, name="recovery_page"),
-    path("sign-in-page/", views.sign_in_page, name="sign_in_page"),
-    path("sign-up-email/", views.sign_up_email, name="sign_up-email"),
-    
-    #  need fix
-    path('profile',views.profile),
+
     path('api/v1/logIn',views.logIn),
     path('api/v1/signUp', views.signUp),
     path('api/v1/logOut',views.logOut),
-    path('activate/<slug:uidb64>/<slug:token>/',
-            views.activate, name='activate'),
+    path('api/v1/resetPass', views.passRecovery),
+    path('api/v1/changePass', views.change_pass),
+
+
+    path('', views.main),
+    path('activate/<slug:uidb64>/<slug:token>/',views.activate, name='activate'),
+    path('reset/<slug:uidb64>/<slug:token>/',views.set_recovery_pass, name='reset'),
+    path('login/', views.loginning),
+    path('signup/', views.signupping),
+    path('signup/email/', views.signup_email),
+    path('profile/', views.profile),
+    path('profile/password/change/', views.change_pass_view),
+    path('password/recovery/', views.recovery_page),
+    path('password/recovery/done', views.recovery_page_email)
+
 ]
