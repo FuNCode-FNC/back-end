@@ -10,4 +10,9 @@ urlpatterns = [
     path('recovery-new-password/', views.recovery_new_password, name='recovery_new_password'),
     path('change-new-password/', views.change_new_password, name='change_new_password'),
     path('sign-up-page/', views.sign_up_page, name='sign_up_page'),
+    path("films_genres/", views.films_genres, name="films_genres"),
+    path("moderator/", views.moderator, name="moderator"),
+    path("recovery-page/", views.recovery_page, name="recovery_page"),
+    path("sign-in-page/", views.sign_in_page, name="sign_in_page"),
+    path("sign-up-email/", views.sign_up_email, name="sign_up-email"),
 ]
