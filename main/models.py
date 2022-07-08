@@ -184,7 +184,7 @@ class Viewed(models.Model):
     class Meta:
         verbose_name_plural = "Просмотренные"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -193,7 +193,7 @@ class Favorites(models.Model):
     class Meta:
         verbose_name_plural = "Избранные"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -202,6 +202,6 @@ class ScheduledForViewing(models.Model):
     class Meta:
         verbose_name_plural = "Запланированные к просмотру"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
