@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
+from .models import Comment
+
 User = get_user_model()
 
 class RegisterForm(forms.ModelForm):
@@ -59,3 +61,9 @@ class UserAdminChangeForm(forms.ModelForm):
     def clean_password(self):
 
         return self.initial["password"]
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        comment = Comment
+        fields = ['author', 'body', 'rating']
