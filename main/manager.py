@@ -1,8 +1,8 @@
-
 from django.contrib.auth.models import BaseUserManager
 
+
 class CustomerManager(BaseUserManager):
-    def create_user(self,username, email,account_type = "user", firstName = None,secondName = None, password=None, is_admin=False, is_active=True):
+    def create_user(self,username, email,account_type = "user", firstName = None,secondName = None, password=None, is_admin=False, is_active=False):
         if not email:
             raise ValueError("User must have an email")
         if not password:
@@ -18,18 +18,17 @@ class CustomerManager(BaseUserManager):
         user.account_type = account_type
         user.set_password(password)  # change password to hash
         user.admin = is_admin
-        user.active = is_active
+        user.is_active = is_active
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email,username,   password):
+    def create_superuser(self, email, username, password):
         if not email:
             raise ValueError("User must have an email")
         if not username:
             raise ValueError("User must have an username")
         if not password:
             raise ValueError("User must have a password")
-
 
         user = self.model(
             email=self.normalize_email(email)
@@ -42,3 +41,4 @@ class CustomerManager(BaseUserManager):
         user.save(using=self._db)
         user.is_superuser = True
         return user
+

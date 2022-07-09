@@ -272,7 +272,7 @@ body .description .col-2{
 }
 
 .new-content .con-poster {
-    background-image: url("../media/films/content_poster.jfif");
+    background-image: url("../../media/films/content_poster.jfif");
     background-size: 190px 275px;
 }
 
@@ -314,22 +314,23 @@ body .description .col-2{
     margin-left: 65px;
 }
 
-footer .container {
+foot .container {
     width: 100%;
     height: 140px;
     background-color: #0A1627;
 }
 
 
-footer .logo {
+foot .logo {
     padding: 0;
     margin: 0;
+    background-image: url("../../main_page/static/img/logo.png");
     background-size: 252px 62px;
     background-repeat: no-repeat;
     margin-right: 55px;
 }
 
-footer .text {
+foot .text {
     width: 493px;
     height: 63px;
     padding: 0;
@@ -346,7 +347,7 @@ footer .text {
     color: #E3DEDE;
 }
 
-footer .copyright {
+foot .copyright {
     width: 260px;
     height:100px;
     margin-left: auto;
@@ -354,7 +355,7 @@ footer .copyright {
 
 }
 
-footer .copyright .underlined {
+foot .copyright .underlined {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 800;
@@ -366,7 +367,7 @@ footer .copyright .underlined {
 }
 
 
-footer .copyright .other {
+foot .copyright .other {
 
     font-family: 'Inter';
     font-style: normal;
@@ -379,7 +380,7 @@ footer .copyright .other {
 
 }
 
-footer .copyright .red-color {
+foot .copyright .red-color {
     color: #FE0039;
 }
 

@@ -7,8 +7,6 @@ from .models import Comment
 User = get_user_model()
 
 class RegisterForm(forms.ModelForm):
-
-
     password = forms.CharField(widget=forms.PasswordInput)
     password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
@@ -17,7 +15,6 @@ class RegisterForm(forms.ModelForm):
         fields = ['email']
 
     def clean_email(self):
-
         email = self.cleaned_data.get('email')
         qs = User.objects.filter(email=email)
         if qs.exists():
@@ -25,7 +22,6 @@ class RegisterForm(forms.ModelForm):
         return email
 
     def clean(self):
-
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
         password_2 = cleaned_data.get("password_2")
@@ -35,7 +31,6 @@ class RegisterForm(forms.ModelForm):
 
 
 class UserAdminCreationForm(forms.ModelForm):
-
     password = forms.CharField(widget=forms.PasswordInput)
 
     class Meta:
@@ -51,7 +46,6 @@ class UserAdminCreationForm(forms.ModelForm):
 
 
 class UserAdminChangeForm(forms.ModelForm):
-
     password = ReadOnlyPasswordHashField()
 
     class Meta:
@@ -59,7 +53,6 @@ class UserAdminChangeForm(forms.ModelForm):
         fields = ['email','username','password', 'admin', 'firstName', 'secondName','is_active']
 
     def clean_password(self):
-
         return self.initial["password"]
 
 
@@ -67,3 +60,4 @@ class CommentForm(forms.ModelForm):
     class Meta:
         comment = Comment
         fields = ['author', 'body', 'rating']
+

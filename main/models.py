@@ -4,19 +4,19 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 
-
-class Customer(AbstractBaseUser, PermissionsMixin):
+class Customer(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
         unique=True,
     )
     username = models.CharField('username', max_length=256)
-    firstName = models.CharField('Имя', max_length=256, null=True)
-    secondName = models.CharField('Фамилия', max_length=256, null=True)
+    firstName = models.CharField('Имя', max_length=256,null=True)
+    secondName = models.CharField('Фамилия', max_length=256,null=True)
     is_active = models.BooleanField(default=True)
     account_type = models.CharField("Тип", max_length=30)
-    admin = models.BooleanField(default=False)  # a superuser
+    admin = models.BooleanField(default=False) # a superuser
+    verif_time = models.DateTimeField(null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -40,7 +40,6 @@ class Customer(AbstractBaseUser, PermissionsMixin):
         if self.account_type == 'mod' or self.account_type == 'admin':
             return True
         return False
-
     class Meta:
         verbose_name = 'пользователь'
         verbose_name_plural = 'пользователи'
@@ -184,7 +183,7 @@ class Viewed(models.Model):
     class Meta:
         verbose_name_plural = "Просмотренные"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -193,7 +192,7 @@ class Favorites(models.Model):
     class Meta:
         verbose_name_plural = "Избранные"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
 
@@ -202,6 +201,6 @@ class ScheduledForViewing(models.Model):
     class Meta:
         verbose_name_plural = "Запланированные к просмотру"
 
-    user_pk = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
+    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
     film_ref = models.ManyToManyField(Film)
     episode_ref = models.ManyToManyField(Episode)
