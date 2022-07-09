@@ -1,4 +1,6 @@
-
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CommentForm
+from .models import Comment,Film
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -11,7 +13,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .token import account_activation_token
 from django.core.mail import send_mail,EmailMessage
-
 from django.contrib.auth.decorators import login_required
 from datetime import datetime,timedelta
 import pytz
@@ -101,6 +102,26 @@ def main_page(request):
     return render(request, 'main/main_page.html')
 
 
+
+def film_detail(request, pk):
+    film = get_object_or_404(Film, pk=pk)
+    return render(request, 'main/filmpage.html', {'film': film})
+
+
+def comment_detail(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = CommentForm(request.Commment)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.rating = form.cleaned_data['rating']
+                comment.save()
+                return redirect('')
+    form = CommentForm()
+    return render(request, 'main/filmpage.html', {'form': form})
+
+
 def account(request):
     return render(request, 'main/account.html')
 
@@ -143,4 +164,3 @@ def sign_in_page(request):
 
 def sign_up_email(request):
     return render(request, 'main/sign-up-email.html')
-
