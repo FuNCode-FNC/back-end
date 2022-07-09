@@ -32,22 +32,22 @@ main{
 }
 
 /*Фильмы*/
-.films_profil{
+.films_profile{
     width: 1324px;
     margin: 20px 58px;
 }
-.films_profil h1{
+.films_profile h1{
     margin: 10px auto 20px 63px;
     height: 45px;
 }
-.films_profil a{
+.films_profile a{
     text-decoration: none;
     color:#FE0039;
 }
-.films_profil a:hover{
+.films_profile a:hover{
     color:#e3dede;
 }
-.films_profil div{
+.films_profile div{
     display: flex;
 }
 .film_object{
@@ -76,7 +76,7 @@ main{
     color: #808080;
     font-size: 20px;
 }
-.films_profil div .arrow{
+.films_profile div .arrow{
     position: relative;
     top: 170px;
     cursor: pointer;

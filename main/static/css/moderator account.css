@@ -2,24 +2,24 @@ main{
     background-color: #0A1627;
 }
 /*Окно профиля*/
-.photo_profil{
+.photo_profile {
     background-image: url(../img/grad-main-page.png);
     width: 100%; height: 511px;
 }
-.photo_profil img{
+.photo_profile img{
     margin: 71px auto 44px 595px; 
 }
-.photo_profil h2{
+.photo_profile h2{
     color: #e3dede;
     margin: 0px auto 22px 646px;
     font-size: 30px;
 }
-.photo_profil h3{
+.photo_profile h3{
     color: #e3dede;
     margin: 0px auto auto 655px;
     font-size: 24px;
 }
-.photo_profil p{
+.photo_profile p{
     color: #0A1627;
     background-color: rgba(217, 217, 217, 0.5);
     text-align: center;
@@ -32,22 +32,22 @@ main{
 }
 
 /*Фильмы*/
-.films_profil{
+.films_profile{
     width: 1324px;
     margin: 20px 58px;
 }
-.films_profil h1{
+.films_profile h1{
     margin: 10px auto 20px 63px;
     height: 45px;
 }
-.films_profil a{
+.films_profile a{
     text-decoration: none;
     color:#FE0039;
 }
-.films_profil a:hover{
+.films_profile a:hover{
     color:#e3dede;
 }
-.films_profil div{
+.films_profile div{
     display: flex;
 }
 .film_object{
@@ -76,7 +76,7 @@ main{
     color: #808080;
     font-size: 20px;
 }
-.films_profil div .arrow{
+.films_profile div .arrow{
     position: relative;
     top: 170px;
     cursor: pointer;

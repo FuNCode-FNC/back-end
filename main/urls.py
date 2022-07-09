@@ -18,7 +18,6 @@ urlpatterns = [
 
     path('recovery-email/', views.recovery_page_email),
 
-
     path('sign-up-page/', views.sign_up_page, name='sign_up_page'),
     path("films_genres/", views.films_genres, name="films_genres"),
     path("moderator/", views.moderator, name="moderator"),  # доступна только модератору
@@ -30,10 +29,10 @@ urlpatterns = [
     path('api/v1/logOut', views.logOut),
     path('api/v1/resetPass', views.passRecovery),
     path('api/v1/changePass', views.change_pass),
-    path('activate/<slug:uidb64>/<slug:token>/',
-            views.activate, name='activate'),
+    path('activate/<slug:uidb64>/<slug:token>/', views.activate, name='activate'),
     path('reset/<slug:uidb64>/<slug:token>/', views.set_recovery_pass, name='reset'),
 
+    path('about', views.main_page, name='about')
     # path('', views.main),
     # path('activate/<slug:uidb64>/<slug:token>/', views.activate, name='activate'),
     # path('login/', views.loginning),

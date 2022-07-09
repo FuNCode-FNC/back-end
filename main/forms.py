@@ -6,6 +6,7 @@ from .models import Comment
 
 User = get_user_model()
 
+
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
@@ -35,7 +36,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email','username','password', 'admin', 'firstName', 'secondName']
+        fields = ['email', 'username', 'password', 'admin', 'firstName', 'secondName']
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -50,7 +51,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email','username','password', 'admin', 'firstName', 'secondName','is_active']
+        fields = ['email', 'username', 'password', 'admin', 'firstName', 'secondName', 'is_active']
 
     def clean_password(self):
         return self.initial["password"]
@@ -60,4 +61,3 @@ class CommentForm(forms.ModelForm):
     class Meta:
         comment = Comment
         fields = ['author', 'body', 'rating']
-
