@@ -169,7 +169,7 @@
         success:(response)=>{
             console.log(response)
             if(response.login_pass == true){
-                window.location.replace("/profile")
+                window.location.replace("/account/")
 
             } else if (response.login_pass == null){
                 console.log("неправильный пароль");

@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-)5fhhe&gbd73+i@api^&$4ts!_+rfw-0%ze4ws@#j&e)ahu8z+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -117,8 +117,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_HOST_USER = 'ant1hype4@yandex.ru'
-EMAIL_HOST_PASSWORD = '071002071002'
+EMAIL_HOST_USER = '******'
+EMAIL_HOST_PASSWORD = '*****'
 EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)
