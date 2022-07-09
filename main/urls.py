@@ -15,7 +15,9 @@ urlpatterns = [
     path('change-new-password/', views.change_new_password, name='change_new_password'),
     # доступна только через почту (не трогать)
     path("recovery-page/", views.recovery_page, name="recovery_page"),
+
     path('recovery-email/', views.recovery_page_email),
+
 
     path('sign-up-page/', views.sign_up_page, name='sign_up_page'),
     path("films_genres/", views.films_genres, name="films_genres"),

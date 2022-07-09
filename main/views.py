@@ -120,6 +120,7 @@ def comment_detail(request):
     form = CommentForm()
     return render(request, 'main/filmpage.html', {'form': form})
 
+
 @login_required()
 def account(request):
     return render(request, 'main/account.html')
@@ -164,7 +165,6 @@ def sign_in_page(request):
     return render(request, 'main/sign-in-page.html')
 
 def sign_up_email(request):
-
     email = request.COOKIES.get('email')
     if email:
         response = render(request,'main/sign-up-email.html',{'email':email})
@@ -213,6 +213,8 @@ def set_recovery_pass(request,token,uidb64):
             del request.session[INTERNAL_RESET_SESSION_TOKEN]
             return JsonResponse({'status':True})
         pass
+        
+        
 def passRecovery(request):
     data = json.loads(request.body)
     user = get_user_model().objects.get(email=data['email'])
@@ -259,8 +261,8 @@ def change_pass(request):
 def recovery_page_email(request):
     email = request.session.get('email')
     if email:
-
         del request.session['email']
         return  render(request,'main/recovery-page-email.html',{'email':email})
     else:
         return redirect('/')
+
