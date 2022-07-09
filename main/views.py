@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CommentForm
 from .models import Comment,Film
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from .models import Customer
@@ -11,21 +11,15 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes,force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
-from .token import account_activation_token
+from .token import token_generator
 from django.core.mail import send_mail,EmailMessage
 from django.contrib.auth.decorators import login_required
 from datetime import datetime,timedelta
 import pytz
 
 utc=pytz.UTC
-expiration_time = 1
+expiration_time = 5
 
-def  index(request):
-    return render(request,'login.html')
-
-@login_required()
-def profile(request):
-    return  render(request,"profile.html")
 
 @require_http_methods(['POST'])
 def logIn(request):
@@ -34,11 +28,11 @@ def logIn(request):
     if user is not None:
         if user.is_active:
             login(request, user)
-            return HttpResponse('Authenticated successfully')
+            return JsonResponse({'login_pass':True})
         else:
-            return HttpResponse('Disabled account')
+            return JsonResponse({'login_pass':False})
     else:
-        return HttpResponse('Invalid login')
+        return JsonResponse({'login_pass':None})
 
     return HttpResponse(200)
 
@@ -46,32 +40,37 @@ def logIn(request):
 
 @require_http_methods(['POST'])
 def signUp(request):
+
     data = json.loads(request.body)
     print(data)
-    user =Customer.objects.create_user(email=data['email'],password=data['password'],username = data['username'])
+    try:
+        user =Customer.objects.create_user(email=data['email'],password=data['password'],username = data['username'])
+    except:
+        return JsonResponse({"user_reg":True})
     user.is_active = False
     table_expire_datetime = datetime.now() + timedelta(minutes=expiration_time)
     expired_on = table_expire_datetime.replace(tzinfo=utc)
     user.verif_time = expired_on
     user.save()
     current_site = get_current_site(request)
-    mail_subject = 'Activation link has been sent to your email id'
-    message = render_to_string('acc_active_email.html', {
+    mail_subject = 'Activation link has been sent to your email'
+    message = render_to_string('main/email/email-registration.html', {
         'user': user,
         'domain': current_site.domain,
         'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-        'token':account_activation_token.make_token(user),
+        'token':token_generator.make_token(user),
     })
 
     send_mail(
         mail_subject,
         message,
-        'trofimov.vlad-1234@yandex.ru',
+        'ant1hype4@yandex.ru',
         [data['email']],
         fail_silently=False,
     )
-
-    return HttpResponse(200)
+    response = HttpResponse(200)
+    response.set_cookie('email', data['email'])
+    return response
     
     
 def logOut(request):
@@ -86,14 +85,14 @@ def activate(request, uidb64, token):
         user = User.objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user, token):
+    if user is not None and token_generator.check_token(user, token):
         if datetime.now().replace(tzinfo=utc) > user.verif_time:
             user.verif_time = None
             return HttpResponse('Activation link has expired!')
 
         user.is_active = True
         user.save()
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
+        return redirect('/')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -122,6 +121,7 @@ def comment_detail(request):
     return render(request, 'main/filmpage.html', {'form': form})
 
 
+@login_required()
 def account(request):
     return render(request, 'main/account.html')
 
@@ -137,7 +137,7 @@ def list_of_films(request):
 def recovery_new_password(request):
     return render(request, "main/recovery-new-password.html")
 
-
+@login_required()
 def change_new_password(request):
     return render(request, "main/change-new-password.html")
 
@@ -155,12 +155,114 @@ def moderator(request):
 
 
 def recovery_page(request):
+    user = request.user
+    if user.is_authenticated:
+        return redirect('/')
     return render(request, 'main/recovery-page.html')
 
 
 def sign_in_page(request):
     return render(request, 'main/sign-in-page.html')
 
-
 def sign_up_email(request):
-    return render(request, 'main/sign-up-email.html')
+    email = request.COOKIES.get('email')
+    if email:
+        response = render(request,'main/sign-up-email.html',{'email':email})
+        response.delete_cookie('email')
+        return response
+    return redirect('/')
+
+def set_recovery_pass(request,token,uidb64):
+    User = get_user_model()
+    INTERNAL_RESET_SESSION_TOKEN = "_password_reset_token"
+    reset_url_token = 'set-password'
+
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if request.method == 'GET':
+        if token!=reset_url_token:
+
+            if user is not None and token_generator.check_token(user, token):
+                if datetime.now().replace(tzinfo=utc) > user.verif_time:
+                    user.verif_time = None
+                    return HttpResponse('Activation link has expired!')
+                request.session[INTERNAL_RESET_SESSION_TOKEN] = token
+                redirect_url = request.path.replace(
+                    token, reset_url_token
+                )
+                return redirect(redirect_url)
+            else:
+                return HttpResponse('Activation link is invalid!')
+
+        else:
+            session_token = request.session.get(INTERNAL_RESET_SESSION_TOKEN)
+            if token_generator.check_token(user, session_token):
+                return render(request,'main/recovery-new-password.html')
+    elif request.method == "POST":
+        session_token = request.session.get(INTERNAL_RESET_SESSION_TOKEN)
+        if user is not None and token_generator.check_token(user, session_token):
+            data = json.loads(request.body)
+            if data['password1'] != data['password2']:
+                return JsonResponse({'status':False})
+            user.set_password(data['password1'])
+            user.save()
+            login(request,user)
+            del request.session[INTERNAL_RESET_SESSION_TOKEN]
+            return JsonResponse({'status':True})
+        pass
+        
+        
+def passRecovery(request):
+    data = json.loads(request.body)
+    user = get_user_model().objects.get(email=data['email'])
+
+    if user:
+        table_expire_datetime = datetime.now() + timedelta(minutes=expiration_time)
+        expired_on = table_expire_datetime.replace(tzinfo=utc)
+        user.verif_time = expired_on
+        user.save()
+        current_site = get_current_site(request)
+        mail_subject = 'Reset link has been sent to your email'
+        print(1)
+
+        message = render_to_string('main/email/email-recovery.html', {
+            'user': user,
+            'domain': current_site.domain,
+            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+            'token': token_generator.make_token(user),
+        })
+        print(2)
+        send_mail(
+            mail_subject,
+            message,
+            'ant1hype4@yandex.ru',
+            [data['email']],
+            fail_silently=False,
+        )
+
+        request.session['email'] =data['email']
+
+        return HttpResponse(200)
+
+def change_pass(request):
+    data = json.loads(request.body)
+    if data['password1'] == data['password2']:
+        user = request.user
+
+        user.set_password(data['password1'])
+        user.save()
+        login(request,user)
+        return JsonResponse({"match":True})
+    return JsonResponse({"match":False})
+
+def recovery_page_email(request):
+    email = request.session.get('email')
+    if email:
+        del request.session['email']
+        return  render(request,'main/recovery-page-email.html',{'email':email})
+    else:
+        return redirect('/')
+

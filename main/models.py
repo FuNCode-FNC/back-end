@@ -15,7 +15,7 @@ class Customer(AbstractBaseUser,PermissionsMixin):
     secondName = models.CharField('Фамилия', max_length=256,null=True)
     is_active = models.BooleanField(default=True)
     account_type = models.CharField("Тип", max_length=30)
-    admin = models.BooleanField(default=False) # a superuser
+    admin = models.BooleanField(default=False)
     verif_time = models.DateTimeField(null=True)
 
     USERNAME_FIELD = 'email'
