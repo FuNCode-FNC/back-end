@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.utils',
-    'main'
+
+    'main.apps.MainConfig',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'cinema.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -109,7 +110,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-#User
+# User
 AUTH_USER_MODEL = 'main.Customer'
 
 #Email
@@ -117,8 +118,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_HOST_USER = '******'
-EMAIL_HOST_PASSWORD = '*****'
+EMAIL_HOST_USER = 'ant1hype4@yandex.ru'
+EMAIL_HOST_PASSWORD = '071002071002'
 EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)
