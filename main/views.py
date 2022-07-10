@@ -96,7 +96,8 @@ def activate(request, uidb64, token):
 
 
 def main_page(request):
-    return render(request, 'main/main_page.html')
+    context = {'films': Film.objects.all()}
+    return render(request, 'main/main_page.html', context=context)
 
 
 def film_detail(request, pk):
