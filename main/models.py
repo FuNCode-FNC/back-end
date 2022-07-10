@@ -18,8 +18,8 @@ class Customer(AbstractBaseUser,PermissionsMixin):
     admin = models.BooleanField(default=False)
     verif_time = models.DateTimeField(null=True)
     fav_films = models.ManyToManyField("Film")
-    fav_serial= models.ManyToManyField("Serial")
-    fav_episode= models.ManyToManyField("Episode")
+    fav_serials= models.ManyToManyField("Serial")
+    fav_episodes= models.ManyToManyField("Episode")
 
 
 

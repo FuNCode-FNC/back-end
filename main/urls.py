@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/v1/signUp', views.signUp),
     path('api/v1/logOut', views.logOut),
     path('api/v1/addFavFilm', views.addFavFilm),
+    path('api/v1/delFavFilm', views.delFavFilm),
 
     path('api/v1/resetPass', views.passRecovery),
     path('api/v1/changePass', views.change_pass),
