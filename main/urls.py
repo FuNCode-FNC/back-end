@@ -6,6 +6,7 @@ urlpatterns = [
     path("", views.main_page, name='index'),
     path('account/', views.account, name='account'),  # add key (id)
     path('filmpage/', views.filmpage, name='filmpage'),  # add key (id)
+    path('serialpage/', views.serialpage, name='serialpage'),  # add key (id)
     path("film/<int:pk>", views.film_detail, name='film_detail'),
     path('list-of-films/', views.list_of_films, name='list_of_films'),  # write for loop in template
 

@@ -268,3 +268,8 @@ def recovery_page_email(request):
         return render(request, 'main/recovery-page-email.html', {'email': email})
     else:
         return redirect('/')
+
+
+def serialpage(request):
+    return render(request, 'main/serialpage.html')
+
