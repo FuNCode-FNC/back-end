@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path("", views.main_page, name='index'),
+    path("404/", views.page_not_found_view, name='error'),
     path('account/', views.account, name='account'),  # add key (id)
     path('filmpage/', views.filmpage, name='filmpage'),  # add key (id)
     path('serialpage/', views.serialpage, name='serialpage'),  # add key (id)

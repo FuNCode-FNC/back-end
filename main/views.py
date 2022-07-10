@@ -273,3 +273,7 @@ def recovery_page_email(request):
 def serialpage(request):
     return render(request, 'main/serialpage.html')
 
+
+def page_not_found_view(request):
+    return render(request, 'main/404.html')
+
