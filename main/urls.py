@@ -5,11 +5,11 @@ from . import views
 urlpatterns = [
     path("", views.main_page, name='index'),
     path("404/", views.page_not_found_view, name='error'),
-    path('account/', views.account, name='account'),  # add key (id)
-    path('filmpage/', views.filmpage, name='filmpage'),  # add key (id)
-    path('serialpage/', views.serialpage, name='serialpage'),  # add key (id)
+    path('account/', views.account, name='account'),
+    path('filmpage/', views.filmpage, name='filmpage'),
+    path('serialpage/', views.serialpage, name='serialpage'),
     path("film/<int:pk>", views.film_detail, name='film_detail'),
-    path('list-of-films/', views.list_of_films, name='list_of_films'),  # write for loop in template
+    path('list-of-films/', views.list_of_films, name='list_of_films'),
 
     # доступна только через почту (не трогать)
     path('recovery-new-password/', views.recovery_new_password, name='recovery_new_password'),
