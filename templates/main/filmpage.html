@@ -296,13 +296,14 @@
         }
 
         document.querySelector("button").addEventListener("click", () => {
-            const film_id = document.querySelectorAll("input")[0].value;
+            const movie_type = window.location.href.split("/")[3]
+            const movie_id = window.location.href.split("/")[4]
 
-
-            data = {film_id: film_id}
+            console.log(window.location.href)
+            data = {movie_type: movie_type,movie_id:movie_id}
             $.ajax({
                 type: "POST",
-                url: '/api/v1/addFavFilm/',
+                url: '/api/v1/addFavFilm',
                 dataType: "json",
                 contentType: 'application/json',
 

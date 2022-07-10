@@ -100,7 +100,7 @@ class Film(models.Model):
     country = models.ManyToManyField(Country, blank=True)
     person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     screensaver_reference = models.URLField()
-    magnet_reference = models.URLField()
+    magnet_reference = models.CharField('magnet link', max_length=300)
     def __str__(self):
         return self.name
 

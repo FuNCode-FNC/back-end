@@ -280,6 +280,15 @@ def page_not_found_view(request):
 @login_required()
 def addFavFilm(request):
     user = request.user
+    data = json.loads(request.body)
+    print(data)
+    movie_type = data['movie_type']
+    movie_id = data['movie_id']
+    if movie_type == 'film':
+        movie = Film.objects.get(id = movie_id)
+
+    # elif movie_type == "serial":
+    #     movie = Se
     print(user.id)
-    favs = Favorites.objects.get(user_pk = user.id)
+
     return JsonResponse({'slatt':'slatt'})
