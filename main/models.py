@@ -17,6 +17,11 @@ class Customer(AbstractBaseUser,PermissionsMixin):
     account_type = models.CharField("Тип", max_length=30)
     admin = models.BooleanField(default=False)
     verif_time = models.DateTimeField(null=True)
+    fav_films = models.ManyToManyField("Film")
+    fav_serial= models.ManyToManyField("Serial")
+    fav_episode= models.ManyToManyField("Episode")
+
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -95,8 +100,7 @@ class Film(models.Model):
     country = models.ManyToManyField(Country, blank=True)
     person_who_added = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     screensaver_reference = models.URLField()
-    magnet_reference = models.URLField()
-
+    magnet_reference = models.CharField('magnet link', max_length=300)
     def __str__(self):
         return self.name
 
@@ -179,28 +183,7 @@ class Trailer(models.Model):
         return True
 
 
-class Viewed(models.Model):
-    class Meta:
-        verbose_name_plural = "Просмотренные"
-
-    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    film_ref = models.ManyToManyField(Film)
-    episode_ref = models.ManyToManyField(Episode)
 
 
-class Favorites(models.Model):
-    class Meta:
-        verbose_name_plural = "Избранные"
-
-    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    film_ref = models.ManyToManyField(Film)
-    episode_ref = models.ManyToManyField(Episode)
 
 
-class ScheduledForViewing(models.Model):
-    class Meta:
-        verbose_name_plural = "Запланированные к просмотру"
-
-    user_pk = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    film_ref = models.ManyToManyField(Film)
-    episode_ref = models.ManyToManyField(Episode)

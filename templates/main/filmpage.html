@@ -4,6 +4,8 @@
 {% block extra_head %}
     <link href="{% static 'css/filmandserial.css' %}" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
     <script src="{% static 'js/webtorrent.min.js' %}"></script>
@@ -17,6 +19,9 @@
                 <div class="p-4"></div>
                 <div class="col-1">
                     <div class="position-relative">
+                         <button type="button">
+                <a href="#" id="submitButton" class="gradient-text" style="margin: 10px;">add fav</a>
+            </button>
                         <div class="position-absolute top-0 start-50 translate-middle-x">
                             <img src="{% static 'img/bookmark.svg' %}" width="45px" height="60px">
                         </div>
@@ -276,6 +281,49 @@
         }
 
         startDownloadingTorrent( '{{ film.magnet_reference }}' );
+
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) c_end = document.cookie.length;
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return "";
+        }
+
+        document.querySelector("button").addEventListener("click", () => {
+            const movie_type = window.location.href.split("/")[3]
+            const movie_id = window.location.href.split("/")[4]
+
+            console.log(window.location.href)
+            data = {movie_type: movie_type,movie_id:movie_id}
+            $.ajax({
+                type: "POST",
+                url: '/api/v1/addFavFilm',
+                dataType: "json",
+                contentType: 'application/json',
+
+                data: JSON.stringify(data),
+                credentials: 'include',
+                headers: {"X-CSRFToken": getCookie("csrftoken")},
+                success: (response) => {
+                    console.log(response)
+                    if (response.status == true) {
+                        window.location.replace(`/account/`)
+
+                    } else {
+                        console.log('пароли не совпадают');
+
+                    }
+                }
+            });
+
+
+        })
     </script>
 
 {% endblock %}

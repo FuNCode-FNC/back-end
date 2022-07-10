@@ -277,3 +277,18 @@ def serialpage(request):
 def page_not_found_view(request):
     return render(request, 'main/404.html')
 
+@login_required()
+def addFavFilm(request):
+    user = request.user
+    data = json.loads(request.body)
+    print(data)
+    movie_type = data['movie_type']
+    movie_id = data['movie_id']
+    if movie_type == 'film':
+        movie = Film.objects.get(id = movie_id)
+
+    # elif movie_type == "serial":
+    #     movie = Se
+    print(user.id)
+
+    return JsonResponse({'slatt':'slatt'})
