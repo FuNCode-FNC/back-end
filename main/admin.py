@@ -43,6 +43,4 @@ admin.site.register(Serial)
 admin.site.register(Season)
 admin.site.register(Episode)
 admin.site.register(Trailer)
-admin.site.register(Viewed)
-admin.site.register(Favorites)
-admin.site.register(ScheduledForViewing)
+

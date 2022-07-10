@@ -277,3 +277,9 @@ def serialpage(request):
 def page_not_found_view(request):
     return render(request, 'main/404.html')
 
+@login_required()
+def addFavFilm(request):
+    user = request.user
+    print(user.id)
+    favs = Favorites.objects.get(user_pk = user.id)
+    return JsonResponse({'slatt':'slatt'})

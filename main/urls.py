@@ -29,6 +29,8 @@ urlpatterns = [
     path('api/v1/logIn', views.logIn),
     path('api/v1/signUp', views.signUp),
     path('api/v1/logOut', views.logOut),
+    path('api/v1/addFavFilm', views.addFavFilm),
+
     path('api/v1/resetPass', views.passRecovery),
     path('api/v1/changePass', views.change_pass),
     path('activate/<slug:uidb64>/<slug:token>/', views.activate, name='activate'),
