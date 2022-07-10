@@ -2,7 +2,8 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class CustomerManager(BaseUserManager):
-    def create_user(self,username, email,account_type = "user", firstName = None,secondName = None, password=None, is_admin=False, is_active=False):
+    def create_user(self, username, email, account_type="user", firstName=None, secondName=None, password=None,
+                    is_admin=False, is_active=False):
         if not email:
             raise ValueError("User must have an email")
         if not password:
@@ -41,4 +42,3 @@ class CustomerManager(BaseUserManager):
         user.save(using=self._db)
         user.is_superuser = True
         return user
-
