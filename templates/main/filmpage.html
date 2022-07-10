@@ -1,5 +1,6 @@
 {% extends 'template.html' %}
 {% load static %}
+
 {% block extra_head %}
     <link href="{% static 'css/filmandserial.css' %}" rel="stylesheet" type="text/css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -7,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@800&display=swap" rel="stylesheet">
     <script src="{% static 'js/webtorrent.min.js' %}"></script>
 {% endblock %}
+
+
 {% block content %}
     <main class="content main bluebar" id="content">
         <div class="container bluebar">
@@ -20,37 +23,40 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <p class="title">Yes Man</p>
+                    <p class="title">{{ film.name }}</p>
                 </div>
             </div>
             <div class="row gx-1">
                 <div class="col-1"></div>
                 <div class="col-3">
-                    <img src="{% static 'img/film.png' %}" width="304" height="430">
+                    <img src="{{ film.screensaver_reference }}" width="304" height="430">
                 </div>
                 <div class="col-3">
                     <ul class="filmdescriptioin">
                         <li><p class="whitetext">genre</p></li>
-                        <li><p class="greytext">Comedy, Romance</p></li>
-                        <li><p class="whitetext">duration</p></li>
-                        <li><p class="greytext">1h 44m</p></li>
+                        <li><p class="greytext">{% for genre in film.genre.all %}
+                            {% if not forloop.last %}
+                                {{ genre.name }},
+                            {% else %}
+                                {{ genre.name }}
+                            {% endif %}
+                        {% endfor %}</p></li>
                         <li><p class="whitetext">director</p></li>
                         <li><p class="greytext">Peyton Reed</p></li>
                         <li><p class="whitetext">release</p></li>
                         <li><p class="greytext">2008</p></li>
                         <li><p class="whitetext">country</p></li>
-                        <li><p class="greytext">USA, The Great Britain</p></li>
+                        <li><p class="greytext">{% for country in film.country.all %}
+                            {% if not forloop.last %}
+                                {{ country.name }},
+                            {% else %}
+                                {{ country.name }}
+                            {% endif %}
+                        {% endfor %}</p></li>
                     </ul>
                 </div>
                 <div class="col-5">
-                    <p class="description">Carl Allen is at a standstill. No future - until the day he enrolls into a
-                        personal development program based on a very simple idea: say yes to everything. Carl discovers
-                        with
-                        amazement the magical power of "Yes", and sees his professional and romantic life turned upside
-                        down
-                        overnight: an unexpected promotion and a new girlfriend. But he'll soon discover that better can
-                        be
-                        good's enemy, and that not all opportunities should be taken.</p>
+                    <p class="description">{{ film.description }}</p>
                 </div>
             </div>
         </div>
@@ -203,13 +209,13 @@
 
 {% block scripts %}
     <script>
-       let Trackers = ['udp://tracker.internetwarriors.net:1337/announce',
-           'wss://tracker.openwebtorrent.com',
-           'wss://tracker.btorrent.xyz',
-       ];
+        let Trackers = ['udp://tracker.internetwarriors.net:1337/announce',
+            'wss://tracker.openwebtorrent.com',
+            'wss://tracker.btorrent.xyz',
+        ];
         let client = new WebTorrent();
-        let downloadProperties = { isClientActive: false, fileName: '', fileSize: 0, progress: 0, downloadSpeed: 0 };
-          let metadataStatus = { isCollectingMetadata: true, currentFile: 0, totalFiles: 0 };
+        let downloadProperties = {isClientActive: false, fileName: '', fileSize: 0, progress: 0, downloadSpeed: 0};
+        let metadataStatus = {isCollectingMetadata: true, currentFile: 0, totalFiles: 0};
 
         function startDownloadingTorrent(hashes) {
             let hashArray = hashes.split('+');
@@ -230,7 +236,6 @@
             });
             torrent.on('ready', () => {
                 console.log('Ready!');
-                clearTimeout(timeoutID);
                 metadataStatus.isCollectingMetadata = false;
                 metadataStatus.currentFile = 0;
                 metadataStatus.totalFiles = 0;
@@ -270,7 +275,7 @@
             });
         }
 
-        startDownloadingTorrent('magnet:?xt=urn:btih:e090434e40d2c51a46f3362ab9c941ca535dfdbc&dn=How%20To%20Train%20Your%20Dragon%20The%20Hidden%20World%20(2019)%20%5bWEBRip%5d%20%5b720p%5d%20%5bYTS.AM%5d&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.leechers-paradise.org%3a6969%2fannounce&tr=udp%3a%2f%2f9.rarbg.to%3a2710%2fannounce&tr=udp%3a%2f%2fp4p.arenabg.ch%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.cyberia.is%3a6969%2fannounce&tr=http%3a%2f%2fp4p.arenabg.com%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.internetwarriors.net%3a1337%2fannounce');
+        startDownloadingTorrent( '{{ film.magnet_reference }}' );
     </script>
 
 {% endblock %}
