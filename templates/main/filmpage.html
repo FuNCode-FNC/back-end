@@ -18,14 +18,14 @@
             <div class="row">
                 <div class="p-4"></div>
                 <div class="col-1">
-                    <div class="position-relative">
-                         <button type="button">
-                <a href="#" id="submitButton" class="gradient-text" style="margin: 10px;">add fav</a>
-            </button>
-                        <div class="position-absolute top-0 start-50 translate-middle-x">
-                            <img src="{% static 'img/bookmark.svg' %}" width="45px" height="60px">
-                        </div>
-                    </div>
+{#                    <div class="position-relative">#}
+{#                        <button type="button">#}
+{#                            <a href="#" id="submitButton" class="gradient-text" style="margin: 10px;">add fav</a>#}
+{#                        </button>#}
+{#                        <div class="position-absolute top-0 start-50 translate-middle-x">#}
+{#                            <img src="{% static 'img/bookmark.svg' %}" width="45px" height="60px">#}
+{#                        </div>#}
+{#                    </div>#}
                 </div>
                 <div class="col-2">
                     <p class="title">{{ film.name }}</p>
@@ -214,73 +214,19 @@
 
 {% block scripts %}
     <script>
-        let Trackers = ['udp://tracker.internetwarriors.net:1337/announce',
-            'wss://tracker.openwebtorrent.com',
-            'wss://tracker.btorrent.xyz',
-        ];
+
         let client = new WebTorrent();
-        let downloadProperties = {isClientActive: false, fileName: '', fileSize: 0, progress: 0, downloadSpeed: 0};
-        let metadataStatus = {isCollectingMetadata: true, currentFile: 0, totalFiles: 0};
+        let torrentId = "{{ film.magnet_reference }}"
+        client.add(torrentId, function (torrent) {
 
-        function startDownloadingTorrent(hashes) {
-            let hashArray = hashes.split('+');
+            // Torrents can contain many files. Let's use the .mp4 file
+            const file = torrent.files.find(function (file) {
+                return file.name.endsWith('.mp4')
+            })
 
-            let torrent = client.add(hashArray[0], {
-                announce: ['wss://tracker.openwebtorrent.com', 'wss://tracker.btorrent.xyz'],
-                maxWebConns: -1
-            });
-            Trackers.forEach(tracker => {
-                torrent.addWebSeed(tracker);
-            });
-            torrent.on('infoHash', () => {
-                console.log(torrent);
-                downloadProperties.isClientActive = true;
-                metadataStatus.isCollectingMetadata = true;
-                metadataStatus.currentFile++;
-                metadataStatus.totalFiles = metadataStatus.totalFiles === 0 ? hashArray.length : metadataStatus.totalFiles;
-            });
-            torrent.on('ready', () => {
-                console.log('Ready!');
-                metadataStatus.isCollectingMetadata = false;
-                metadataStatus.currentFile = 0;
-                metadataStatus.totalFiles = 0;
-                let videoFiles = torrent.files.filter(file => file.name.endsWith('.mp4') || file.name.endsWith('.mkv'));
-                if (videoFiles.length === 0) {
-                    alert('No MP4/MKV files were found for the desired movie');
-                    torrent.destroy();
-                    return;
-                }
-                downloadProperties.fileSize = videoFiles[0].length / 1000000;
-                downloadProperties.fileName = videoFiles[0].name;
-            });
-            torrent.on('error', console.log);
-            torrent.on('warning', console.log);
-            torrent.on('download', () => {
-                downloadProperties.downloadSpeed = torrent.downloadSpeed / 1000000;
-                downloadProperties.progress = torrent.progress * 100;
-            });
-            torrent.on('done', () => {
-                torrent.files.filter(file => file.name.endsWith('.mp4') || file.name.endsWith('.mkv')).forEach(file => {
-                    file.getBlobURL((err, url) => {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        let a = document.createElement('a');
-                        a.download = file.name;
-                        a.href = url;
-                        document.body.appendChild(a);
-                        a.click();
-                        a.remove();
-                    });
-                });
-            });
-            torrent.on('noPeers', () => {
-                console.log('No peers');
-            });
-        }
-
-        startDownloadingTorrent( '{{ film.magnet_reference }}' );
+            // Stream the file in the browser
+            file.appendTo('#output')
+        })
 
         function getCookie(c_name) {
             if (document.cookie.length > 0) {
@@ -300,7 +246,7 @@
             const movie_id = window.location.href.split("/")[4]
 
             console.log(window.location.href)
-            data = {movie_type: movie_type,movie_id:movie_id}
+            data = {movie_type: movie_type, movie_id: movie_id}
             $.ajax({
                 type: "POST",
                 url: '/api/v1/addFavFilm',
