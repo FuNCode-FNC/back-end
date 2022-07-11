@@ -15,6 +15,7 @@ from .token import token_generator
 from django.core.mail import send_mail, EmailMessage
 from django.contrib.auth.decorators import login_required
 from datetime import datetime, timedelta
+from django.core import serializers
 import pytz
 
 utc = pytz.UTC
@@ -102,7 +103,8 @@ def main_page(request):
 
 def film_detail(request, pk):
     film = get_object_or_404(Film, pk=pk)
-    return render(request, 'main/filmpage.html', {'film': film})
+    user = request.user
+    return render(request, 'main/filmpage.html', {'film': film,'fav_films':user.fav_films})
 
 
 def comment_detail(request):
@@ -283,12 +285,40 @@ def addFavFilm(request):
     data = json.loads(request.body)
     print(data)
     movie_type = data['movie_type']
-    movie_id = data['movie_id']
+    movie_id = int(str(data['movie_id'])[0])
     if movie_type == 'film':
-        movie = Film.objects.get(id = movie_id)
+        try:
+            movie = Film.objects.get(id=movie_id)
+            user.fav_films.add(movie)
+            return JsonResponse({'done': True})
+        except:
+            return JsonResponse({'status': 'failed to fetch the film'})
+    elif movie_type == 'serial':
+        pass
+    elif movie_type == 'episode':
+        pass
+    return JsonResponse({'done': False})
 
-    # elif movie_type == "serial":
-    #     movie = Se
-    print(user.id)
 
-    return JsonResponse({'slatt':'slatt'})
+
+
+
+@login_required()
+def delFavFilm(request):
+    user = request.user
+    data = json.loads(request.body)
+    movie_type = data['movie_type']
+    movie_id = int(str(data['movie_id'])[0])
+    if movie_type == 'film':
+        try:
+            movie = Film.objects.get(id=movie_id)
+            user.fav_films.remove(movie)
+            return JsonResponse({'done': True})
+        except:
+            return JsonResponse({'status': 'failed to fetch the film'})
+
+    elif movie_type == 'serial':
+        pass
+    elif movie_type == 'episode':
+        pass
+    return JsonResponse({'done': False})
