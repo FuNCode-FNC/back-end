@@ -1,4 +1,6 @@
 {% load static %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <nav class="navbar navbar-expand header">
         <div class="container">
             <div class="navbar-wrapper">
@@ -57,9 +59,9 @@
                         <img src="{% static 'img/correct/profile-vector.svg' %}" height="30px" width="30px">
                     </a>
                     <div class="account_menu">
-                        <div class="row"><a href=#>Your profile</a></div>
+                        <div class="row"><a href="/account/">Your profile</a></div>
                         <div class="row exit">
-                            <div class="col-6"><a href=#>Sign out</a></div>
+                            <div class="col-6" id="sign-out"><a href=#>Sign out</a></div>
                             <div class="col"><img src="{% static 'img/correct/exit.svg' %}" height="17" width="18">
                             </div>
                         </div>
@@ -69,3 +71,41 @@
             </ul>
         </div>
     </nav>
+    <script>
+    console.log('data')
+
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
+        }
+        return "";
+    }
+
+    document.querySelector("#sign-out").addEventListener("click", () => {
+
+        $.ajax({
+            type: "POST",
+            url: "/api/v1/logOut",
+            dataType: "json",
+            contentType: 'application/json',
+
+            credentials: 'include',
+            headers: {"X-CSRFToken": getCookie("csrftoken")},
+            success: (response) => {
+                console.log(response)
+                if (response == 200) {
+                    window.location.replace("/")
+                } else if (response.login_pass == null) {
+                    console.log("неправильный пароль");
+                }
+            }
+        });
+    })
+
+</script>
