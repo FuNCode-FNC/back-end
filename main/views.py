@@ -127,7 +127,9 @@ def comment_detail(request):
 
 @login_required()
 def account(request):
-    return render(request, 'main/account.html')
+    user = request.user
+
+    return render(request, 'main/account.html',{"user":user})
 
 
 def filmpage(request):
