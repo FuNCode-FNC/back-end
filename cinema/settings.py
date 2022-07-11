@@ -134,13 +134,14 @@ USE_TZ = True
 # User
 AUTH_USER_MODEL = 'main.Customer'
 
+LOGIN_URL = '/sign-in-page'
 #Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.yandex.ru'
-EMAIL_HOST_USER = '****@yandex.ru'
-EMAIL_HOST_PASSWORD = '****'
+EMAIL_HOST_USER = 'opiumgang111@yandex.ru'
+EMAIL_HOST_PASSWORD = '1234fasdfasdcfa'
 EMAIL_PORT = 587
 
 # Static files (CSS, JavaScript, Images)

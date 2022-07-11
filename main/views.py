@@ -63,7 +63,7 @@ def signUp(request):
     send_mail(
         mail_subject,
         message,
-        'ant1hype4@yandex.ru',
+        'opiumgang111@yandex.ru',
         [data['email']],
         fail_silently=False,
     )
@@ -104,7 +104,11 @@ def main_page(request):
 def film_detail(request, pk):
     film = get_object_or_404(Film, pk=pk)
     user = request.user
-    return render(request, 'main/filmpage.html', {'film': film,'fav_films':user.fav_films})
+    if user.is_authenticated:
+        return render(request, 'main/filmpage.html', {'film': film, 'fav_films': user.fav_films})
+
+
+    return render(request, 'main/filmpage.html', {'film': film})
 
 
 def comment_detail(request):
@@ -121,7 +125,7 @@ def comment_detail(request):
     return render(request, 'main/filmpage.html', {'form': form})
 
 
-# @login_required()
+@login_required()
 def account(request):
     return render(request, 'main/account.html')
 
@@ -241,7 +245,7 @@ def passRecovery(request):
         send_mail(
             mail_subject,
             message,
-            'ant1hype4@yandex.ru',
+            'opiumgang111@yandex.ru',
             [data['email']],
             fail_silently=False,
         )
