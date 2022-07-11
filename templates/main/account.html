@@ -13,8 +13,8 @@
     <main>
         <div class="photo_profil">
             <img src="{% static 'img/correct/profile-vector.svg' %}" width="250" height="250" title="Your photo">
-            <h2>User name</h2>
-            <h3>User e-mail</h3>
+            <h2>{{user.username}}</h2>
+            <h3>{{user.email}}</h3>
             <p>change profile picture</p>
         </div>
         <div class="films_profile">
@@ -31,7 +31,7 @@
                 <h2>Account details</h2>
                 <div class="row settings_row" id="e-mail">
                     <div class="col-3 title">E-mail</div>
-                    <div class="col text">User's e-mail</div>
+                    <div class="col text">{{user.email}}</div>
                 </div>
                 <div class="row settings_row" id="password">
                     <div class="col-3 title">Password</div>
