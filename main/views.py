@@ -38,43 +38,8 @@ def logIn(request):
     return HttpResponse(200)
 
 
-@require_http_methods(['POST'])
-def signUp(request):
-    data = json.loads(request.body)
-    print(data)
-    try:
-        user = Customer.objects.create_user(email=data['email'], password=data['password'], username=data['username'])
-    except:
-        return JsonResponse({"user_reg": True})
-    user.is_active = False
-    table_expire_datetime = datetime.now() + timedelta(minutes=expiration_time)
-    expired_on = table_expire_datetime.replace(tzinfo=utc)
-    user.verif_time = expired_on
-    user.save()
-    current_site = get_current_site(request)
-    mail_subject = 'Activation link has been sent to your email'
-    message = render_to_string('main/email/email-registration.html', {
-        'user': user,
-        'domain': current_site.domain,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': token_generator.make_token(user),
-    })
-
-    send_mail(
-        mail_subject,
-        message,
-        'opiumgang111@yandex.ru',
-        [data['email']],
-        fail_silently=False,
-    )
-    response = HttpResponse(200)
-    response.set_cookie('email', data['email'])
-    return response
 
 
-def logOut(request):
-    logout(request)
-    return HttpResponse(200)
 
 
 def activate(request, uidb64, token):
@@ -224,49 +189,10 @@ def set_recovery_pass(request, token, uidb64):
         pass
 
 
-def passRecovery(request):
-    data = json.loads(request.body)
-    user = get_user_model().objects.get(email=data['email'])
-
-    if user:
-        table_expire_datetime = datetime.now() + timedelta(minutes=expiration_time)
-        expired_on = table_expire_datetime.replace(tzinfo=utc)
-        user.verif_time = expired_on
-        user.save()
-        current_site = get_current_site(request)
-        mail_subject = 'Reset link has been sent to your email'
-        print(1)
-
-        message = render_to_string('main/email/email-recovery.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': token_generator.make_token(user),
-        })
-        print(2)
-        send_mail(
-            mail_subject,
-            message,
-            'opiumgang111@yandex.ru',
-            [data['email']],
-            fail_silently=False,
-        )
-
-        request.session['email'] = data['email']
-
-        return HttpResponse(200)
 
 
-def change_pass(request):
-    data = json.loads(request.body)
-    if data['password1'] == data['password2']:
-        user = request.user
 
-        user.set_password(data['password1'])
-        user.save()
-        login(request, user)
-        return JsonResponse({"match": True})
-    return JsonResponse({"match": False})
+
 
 
 def recovery_page_email(request):
@@ -284,47 +210,3 @@ def serialpage(request):
 
 def page_not_found_view(request):
     return render(request, 'main/404.html')
-
-@login_required()
-def addFavFilm(request):
-    user = request.user
-    data = json.loads(request.body)
-    print(data)
-    movie_type = data['movie_type']
-    movie_id = int(str(data['movie_id'])[0])
-    if movie_type == 'film':
-        try:
-            movie = Film.objects.get(id=movie_id)
-            user.fav_films.add(movie)
-            return JsonResponse({'done': True})
-        except:
-            return JsonResponse({'status': 'failed to fetch the film'})
-    elif movie_type == 'serial':
-        pass
-    elif movie_type == 'episode':
-        pass
-    return JsonResponse({'done': False})
-
-
-
-
-
-@login_required()
-def delFavFilm(request):
-    user = request.user
-    data = json.loads(request.body)
-    movie_type = data['movie_type']
-    movie_id = int(str(data['movie_id'])[0])
-    if movie_type == 'film':
-        try:
-            movie = Film.objects.get(id=movie_id)
-            user.fav_films.remove(movie)
-            return JsonResponse({'done': True})
-        except:
-            return JsonResponse({'status': 'failed to fetch the film'})
-
-    elif movie_type == 'serial':
-        pass
-    elif movie_type == 'episode':
-        pass
-    return JsonResponse({'done': False})

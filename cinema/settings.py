@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.utils',
-
     'main.apps.MainConfig',
+    'api.apps.ApiConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+APPEND_SLASH=True
 # User
 AUTH_USER_MODEL = 'main.Customer'
 
