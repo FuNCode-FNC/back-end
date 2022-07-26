@@ -1,41 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CommentForm
-from .models import Comment, Film
+from .models import  Film
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout, get_user_model
-from .models import Customer
+from django.contrib.auth import authenticate, login, get_user_model
 import json
 from django.views.decorators.http import require_http_methods
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes, force_str
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.template.loader import render_to_string
+from django.utils.encoding import  force_str
+from django.utils.http import urlsafe_base64_decode
 from .token import token_generator
-from django.core.mail import send_mail, EmailMessage
 from django.contrib.auth.decorators import login_required
-from datetime import datetime, timedelta
-from django.core import serializers
+from datetime import datetime
 import pytz
+from rest_framework.decorators import  permission_classes
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 
 utc = pytz.UTC
 expiration_time = 5
 
 
-@require_http_methods(['POST'])
-def logIn(request):
-    data = json.loads(request.body)
-    user = authenticate(username=data['email'], password=data['password'])
-    if user is not None:
-        if user.is_active:
-            login(request, user)
-            return JsonResponse({'login_pass': True})
-        else:
-            return JsonResponse({'login_pass': False})
-    else:
-        return JsonResponse({'login_pass': None})
-
-    return HttpResponse(200)
 
 
 
@@ -62,6 +44,7 @@ def activate(request, uidb64, token):
 
 
 def main_page(request):
+
     context = {'films': Film.objects.all()}
     return render(request, 'main/main_page.html', context=context)
 
@@ -90,6 +73,7 @@ def comment_detail(request):
     return render(request, 'main/filmpage.html', {'form': form})
 
 
+# @permission_classes([IsAuthenticated])
 @login_required()
 def account(request):
     user = request.user
@@ -191,10 +175,6 @@ def set_recovery_pass(request, token, uidb64):
 
 
 
-
-
-
-
 def recovery_page_email(request):
     email = request.session.get('email')
     if email:
@@ -210,3 +190,5 @@ def serialpage(request):
 
 def page_not_found_view(request):
     return render(request, 'main/404.html')
+
+
